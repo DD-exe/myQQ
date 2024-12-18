@@ -13,3 +13,5 @@
 #include <malloc.h>
 #include <memory.h>
 #include <tchar.h>
+// 全局变量
+extern HINSTANCE hInst;
