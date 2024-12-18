@@ -217,8 +217,10 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
             data->IP[3] = GetDlgItemInt(hDlg, IDC_IP4, &ipBit[3], TRUE);
             data->targetPort= GetDlgItemInt(hDlg, IDC_Port1, &targetBit, TRUE);
             data->myPort = GetDlgItemInt(hDlg, IDC_Port2, &myportBit, TRUE);
-            if (ipBit[0] && ipBit[1] && ipBit[2] && ipBit[3]==FALSE) {
-
+            PAINTSTRUCT ps;
+            HDC hdc = BeginPaint(hDlg, &ps);
+            if ((ipBit[0] & ipBit[1] & ipBit[2] & ipBit[3])==FALSE) {
+                TextOut(hdc,800, 600, L"YourFriend is listening on port L0V3 :)", 39);
             }
             else if (targetBit == FALSE) {
 
@@ -233,6 +235,7 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
                 ShowWindow(neoDialog, SW_SHOW);
                 EndDialog(hDlg, LOWORD(wParam));
             }
+            EndPaint(hDlg, &ps);
             return (INT_PTR)TRUE;
         }
         break;

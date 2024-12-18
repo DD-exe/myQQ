@@ -20,7 +20,6 @@
 #define IDC_IP3                         1004
 #define IDC_IP2                         1005
 #define IDC_IP4                         1006
-#define IDC_Post1                       1007
 #define IDC_Port1                       1007
 #define IDC_Port2                       1008
 #define ID_AsClient                     32777
