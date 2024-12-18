@@ -20,7 +20,9 @@
 #define IDC_IP3                         1004
 #define IDC_IP2                         1005
 #define IDC_IP4                         1006
-#define IDC_IP5                         1007
+#define IDC_Post1                       1007
+#define IDC_Port1                       1007
+#define IDC_Port2                       1008
 #define ID_AsClient                     32777
 #define ID_AsServer                     32778
 #define IDC_STATIC                      -1
@@ -32,7 +34,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        135
 #define _APS_NEXT_COMMAND_VALUE         32779
-#define _APS_NEXT_CONTROL_VALUE         1007
+#define _APS_NEXT_CONTROL_VALUE         1009
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif
