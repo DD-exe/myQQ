@@ -1,0 +1,61 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\HUAWEI\\Desktop\\myQQ\\myQQ\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{3B6AFBF6-FACD-45D3-A44E-37CF0A090E77}|myQQ.vcxproj|C:\\Users\\HUAWEI\\Desktop\\myQQ\\myQQ\\myQQ.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{3B6AFBF6-FACD-45D3-A44E-37CF0A090E77}|myQQ.vcxproj|solutionrelative:myQQ.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{3B6AFBF6-FACD-45D3-A44E-37CF0A090E77}|myQQ.vcxproj|C:\\Users\\HUAWEI\\Desktop\\myQQ\\myQQ\\myQQ.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u00A1 $(  \u0022     ",
+      "RelativeMoniker": "D:0:0:{3B6AFBF6-FACD-45D3-A44E-37CF0A090E77}|myQQ.vcxproj|solutionrelative:myQQ.rc||{177559E0-D141-11D0-92DF-00A0C9138C45}|,   b e g i n       % \u00A1 $(  \u0022     "
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 3,
+          "Children": [
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "myQQ.rc - IDD_CLIENTSET - Dialog",
+              "DocumentMoniker": "C:\\Users\\HUAWEI\\Desktop\\myQQ\\myQQ\\myQQ.rc",
+              "RelativeDocumentMoniker": "myQQ.rc",
+              "ToolTip": "C:\\Users\\HUAWEI\\Desktop\\myQQ\\myQQ\\myQQ.rc - IDD_CLIENTSET - Dialog",
+              "RelativeToolTip": "myQQ.rc - IDD_CLIENTSET - Dialog",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.001005|",
+              "WhenOpened": "2024-12-18T11:03:47.587Z",
+              "EditorCaption": " - IDD_CLIENTSET - Dialog"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{b1e99781-ab81-11d0-b683-00aa00a3ee26}"
+            },
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{2d7728c2-de0a-45b5-99aa-89b609dfde73}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "myQQ.cpp",
+              "DocumentMoniker": "C:\\Users\\HUAWEI\\Desktop\\myQQ\\myQQ\\myQQ.cpp",
+              "RelativeDocumentMoniker": "myQQ.cpp",
+              "ToolTip": "C:\\Users\\HUAWEI\\Desktop\\myQQ\\myQQ\\myQQ.cpp",
+              "RelativeToolTip": "myQQ.cpp",
+              "ViewState": "AgIAALEAAAAAAAAAAAAAAPEAAAAaAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2024-12-17T10:21:48.293Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
