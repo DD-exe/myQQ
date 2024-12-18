@@ -143,7 +143,9 @@
   <ItemGroup>
     <Image Include="icon\myQQ.ico" />
     <Image Include="icon\small.ico" />
-    <Image Include="image\touhou.bmp" />
+    <Image Include="image\touhou.bmp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </Image>
     <Image Include="image\touhou.jpg" />
     <Image Include="image\touhou.png" />
     <Image Include="image\touhou_s.bmp" />
