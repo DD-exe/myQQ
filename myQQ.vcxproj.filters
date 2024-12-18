@@ -39,16 +39,7 @@
     </ResourceCompile>
   </ItemGroup>
   <ItemGroup>
-    <Image Include="small.ico">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="myQQ.ico">
-      <Filter>资源文件</Filter>
-    </Image>
     <Image Include="image\touhou.jpg">
-      <Filter>资源文件</Filter>
-    </Image>
-    <Image Include="icon1.ico">
       <Filter>资源文件</Filter>
     </Image>
     <Image Include="image\touhou.png">

@@ -139,15 +139,12 @@
     <ResourceCompile Include="myQQ.rc" />
   </ItemGroup>
   <ItemGroup>
-    <Image Include="icon1.ico" />
     <Image Include="icon\myQQ.ico" />
     <Image Include="icon\small.ico" />
     <Image Include="image\touhou.bmp" />
     <Image Include="image\touhou.jpg" />
     <Image Include="image\touhou.png" />
     <Image Include="image\touhou_s.bmp" />
-    <Image Include="myQQ.ico" />
-    <Image Include="small.ico" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
