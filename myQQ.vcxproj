@@ -135,6 +135,7 @@
   <ItemGroup>
     <ClCompile Include="client.cpp" />
     <ClCompile Include="myQQ.cpp" />
+    <ClCompile Include="server.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ResourceCompile Include="myQQ.rc" />
