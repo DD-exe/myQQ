@@ -24,7 +24,7 @@ LRESULT CALLBACK WndProc(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK About(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK ClientSet(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK Client(HWND, UINT, WPARAM, LPARAM);
-INT_PTR CALLBACK Server(HWND, UINT, WPARAM, LPARAM);
+INT_PTR CALLBACK ServerSet(HWND, UINT, WPARAM, LPARAM);
 
 // winMain
 int APIENTRY wWinMain(_In_ HINSTANCE hInstance,_In_opt_ HINSTANCE hPrevInstance,_In_ LPWSTR lpCmdLine,_In_ int nCmdShow)
@@ -126,7 +126,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             } // 变量作用域问题
             case ID_AsServer:
             {
-                HWND neoDialog = CreateDialog(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, Server);
+                HWND neoDialog = CreateDialog(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, ServerSet);
                 ShowWindow(neoDialog, SW_SHOW);
                 break;
             }
@@ -263,7 +263,7 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 }
 
 // “服务端设置”框的消息处理程序。
-INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
+INT_PTR CALLBACK ServerSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
     UNREFERENCED_PARAMETER(lParam); // 形式主义
     switch (message)
@@ -278,7 +278,7 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             return (INT_PTR)TRUE;
         }
         else if (LOWORD(wParam) == IDOK) {
-            HWND neoDialog = CreateDialog(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hDlg, Server);
+            HWND neoDialog = CreateDialog(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hDlg, ServerSet);
             ShowWindow(neoDialog, SW_SHOW);
             EndDialog(hDlg, LOWORD(wParam));
             return (INT_PTR)TRUE;
