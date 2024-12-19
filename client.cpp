@@ -32,16 +32,15 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
             data->IP[3] = GetDlgItemInt(hDlg, IDC_IP4, &ipBit[3], TRUE);
             data->targetPort = GetDlgItemInt(hDlg, IDC_Port1, &targetBit, TRUE);
             data->myPort = GetDlgItemInt(hDlg, IDC_Port2, &myportBit, TRUE);
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hDlg, &ps);
+            HWND Warning = GetDlgItem(hDlg, IDC_NeoSTATIC);
             if ((ipBit[0] & ipBit[1] & ipBit[2] & ipBit[3]) == FALSE) {
-                TextOut(hdc, 800, 600, L"YourFriend is listening on port L0V3 :)", 39);
+                if (Warning != nullptr)SetWindowText(Warning, L"?请输入IP?");
             }
             else if (targetBit == FALSE) {
-
+                if (Warning != nullptr)SetWindowText(Warning, L"?请输入目标端口?");
             }
             else if (myportBit == FALSE) {
-
+                if (Warning != nullptr)SetWindowText(Warning, L"?请输入您的端口?");
             }
             else {
                 HWND neoDialog = CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hDlg, Client,
@@ -50,7 +49,6 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
                 ShowWindow(neoDialog, SW_SHOW);
                 EndDialog(hDlg, LOWORD(wParam));
             }
-            EndPaint(hDlg, &ps);
             return (INT_PTR)TRUE;
         }
         break;
