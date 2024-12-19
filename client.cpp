@@ -43,7 +43,7 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
                 if (Warning != nullptr)SetWindowText(Warning, L"?请输入您的端口?");
             }
             else {
-                HWND neoDialog = CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hDlg, Client,
+                HWND neoDialog = CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_CLIENT), hDlg, Client,
                     reinterpret_cast<LPARAM>(data));
                 //HWND neoDialog = CreateDialog(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hDlg, Client);
                 ShowWindow(neoDialog, SW_SHOW);
@@ -63,17 +63,33 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     switch (message)
     {
     case WM_INITDIALOG:
+    {
+        HWND title = GetDlgItem(hDlg, IDC_CLIENTtitle);
+        std::wstringstream ss;
+        if (data != nullptr) {
+            ss << L"正在和 "<<data->IP[0];
+            for (int i = 1; i < 4; ++i)ss << L"." << data->IP[i];
+            ss << L":" << data->targetPort<<L" 通信";
+        }
+        else {
+            ss << L"正在和 " << L"UNknown" << L" 通信";
+        }
+        std::wstring s = ss.str();
+        const WCHAR* tit = s.c_str();
+        if (title != nullptr) SetWindowText(title, tit);
         return (INT_PTR)TRUE;
-
+    }
     case WM_COMMAND:
-        if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+        if (LOWORD(wParam) == IDCANCEL)
         {
             delete data;
             EndDialog(hDlg, LOWORD(wParam));
             return (INT_PTR)TRUE;
         }
-        break;
+        else if (LOWORD(wParam) == IDSENT) {
 
+        }
+        break;
     }
     return (INT_PTR)FALSE;
 }
