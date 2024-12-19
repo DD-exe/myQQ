@@ -87,7 +87,18 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             return (INT_PTR)TRUE;
         }
         else if (LOWORD(wParam) == IDSENT) {
-
+            HWND sented = GetDlgItem(hDlg, IDC_RECORD);
+            std::wstringstream ss;
+            for (int i = 0; i < 100; ++i) ss << L"1" << L"\r\n";
+            std::wstring s = ss.str();
+            const WCHAR* tit = s.c_str();
+            // 将内容追加到文本框末尾
+            if (sented != nullptr) {
+                int len = GetWindowTextLength(sented);
+                SendMessage(sented, EM_SETSEL, len, len);
+                SendMessage(sented, EM_REPLACESEL, TRUE, reinterpret_cast<LPARAM>(tit));
+            }
+            return (INT_PTR)TRUE;
         }
         break;
     }

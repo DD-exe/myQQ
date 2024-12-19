@@ -27,7 +27,9 @@
 #define IDC_NeoSTATIC                   1010
 #define IDSENT                          1011
 #define IDC_TEXTING                     1012
+#define IDC_                            1012
 #define IDC_RECORD                      1013
+#define IDC_TEXTING2                    1014
 #define IDC_CLIENTtitle                 1015
 #define ID_AsClient                     32777
 #define ID_AsServer                     32778
