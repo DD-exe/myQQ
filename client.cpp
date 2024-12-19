@@ -59,20 +59,23 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 // “客户端”框的消息处理程序。
 INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    clientSession* data = reinterpret_cast<clientSession*>(GetWindowLongPtr(hDlg, GWLP_USERDATA));
+    clientSession* data = reinterpret_cast<clientSession*>(GetWindowLongPtr(hDlg, GWLP_USERDATA)); 
+    // 获取存储的IP和端口
     switch (message)
     {
     case WM_INITDIALOG:
     {
+        clientSession* data = reinterpret_cast<clientSession*>(lParam);
+        SetWindowLongPtr(hDlg, GWLP_USERDATA, lParam); // 初始化目标IP和端口，将其作为窗口变量存储
         HWND title = GetDlgItem(hDlg, IDC_CLIENTtitle);
         std::wstringstream ss;
         if (data != nullptr) {
             ss << L"正在和 "<<data->IP[0];
             for (int i = 1; i < 4; ++i)ss << L"." << data->IP[i];
-            ss << L":" << data->targetPort<<L" 通信";
+            ss << L":" << data->targetPort<<L" 通信……";
         }
         else {
-            ss << L"正在和 " << L"UNknown" << L" 通信";
+            ss << L"正在和 " << L"UNknown" << L" 通信……";
         }
         std::wstring s = ss.str();
         const WCHAR* tit = s.c_str();
@@ -87,17 +90,25 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             return (INT_PTR)TRUE;
         }
         else if (LOWORD(wParam) == IDSENT) {
+            int len = GetWindowTextLength(GetDlgItem(hDlg, IDC_TEXTING2)) + 1;
+            std::wstring text; text.resize(len);
+            GetDlgItemText(hDlg, IDC_TEXTING2,&text[0], len); // 读取发送消息内容
             HWND sented = GetDlgItem(hDlg, IDC_RECORD);
-            std::wstringstream ss;
-            for (int i = 0; i < 100; ++i) ss << L"1" << L"\r\n";
-            std::wstring s = ss.str();
-            const WCHAR* tit = s.c_str();
-            // 将内容追加到文本框末尾
-            if (sented != nullptr) {
-                int len = GetWindowTextLength(sented);
-                SendMessage(sented, EM_SETSEL, len, len);
-                SendMessage(sented, EM_REPLACESEL, TRUE, reinterpret_cast<LPARAM>(tit));
-            }
+            {
+                std::wstringstream ss;
+                text.pop_back();
+                ss << text << L" to " << data->IP[0];
+                for (int i = 1; i < 4; ++i)ss << L"." << data->IP[i];
+                ss << L":" << data->targetPort << L"\r\n";
+                std::wstring s = ss.str();
+                const WCHAR* tit = s.c_str();
+                // 将内容追加到文本框末尾
+                if (sented != nullptr) {
+                    int len = GetWindowTextLength(sented);
+                    SendMessage(sented, EM_SETSEL, len, len);
+                    SendMessage(sented, EM_REPLACESEL, TRUE, reinterpret_cast<LPARAM>(tit));
+                }
+            } // 阶段测试用代码
             return (INT_PTR)TRUE;
         }
         break;
