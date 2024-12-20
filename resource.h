@@ -17,6 +17,8 @@
 #define IDB_BITMAP2                     134
 #define IDD_CLIENT                      135
 #define IDD_SUBCLIENT                   135
+#define IDD_SUBCLIENT1                  136
+#define IDD_SUBSERVER                   136
 #define IDC_MONTHCALENDAR1              1000
 #define IDC_IP                          1003
 #define IDC_IP3                         1004
@@ -30,7 +32,6 @@
 #define IDC_RECORD                      1013
 #define IDC_TEXTING2                    1014
 #define IDC_CLIENTtitle                 1015
-#define IDC_BUTTON1                     1016
 #define IDC_STORE                       1016
 #define ID_AsClient                     32777
 #define ID_AsServer                     32778

@@ -15,3 +15,4 @@
 #include <tchar.h>
 // 全局变量
 extern HINSTANCE hInst;
+extern int serverPort;

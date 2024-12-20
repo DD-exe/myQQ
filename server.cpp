@@ -1,6 +1,6 @@
 #include "framework.h"
 #include "myQQ.h"
-
+int serverPort = 8080;
 // “服务端设置”框的消息处理程序。
 INT_PTR CALLBACK ServerSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -8,20 +8,24 @@ INT_PTR CALLBACK ServerSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
     switch (message)
     {
     case WM_INITDIALOG:
+    {
+        std::wstringstream ss;
+        ss << L"正在监听 " << serverPort;
+        std::wstring s = ss.str();
+        const WCHAR* tit = s.c_str();
+        HWND title = GetDlgItem(hDlg, IDC_CLIENTtitle);
+        if (title != nullptr) SetWindowText(title, tit);
         return (INT_PTR)TRUE;
-
+    }
     case WM_COMMAND:
         if (LOWORD(wParam) == IDCANCEL)
         {
             EndDialog(hDlg, LOWORD(wParam));
             return (INT_PTR)TRUE;
         }
-        else if (LOWORD(wParam) == IDOK) {
-            HWND neoDialog = CreateDialog(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hDlg, ServerSet);
-            ShowWindow(neoDialog, SW_SHOW);
-            EndDialog(hDlg, LOWORD(wParam));
-            return (INT_PTR)TRUE;
-        }
+        break;
+    case WM_TIMER:
+
         break;
     }
     return (INT_PTR)FALSE;
