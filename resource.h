@@ -27,10 +27,11 @@
 #define IDC_NeoSTATIC                   1010
 #define IDSENT                          1011
 #define IDC_TEXTING                     1012
-#define IDC_                            1012
 #define IDC_RECORD                      1013
 #define IDC_TEXTING2                    1014
 #define IDC_CLIENTtitle                 1015
+#define IDC_BUTTON1                     1016
+#define IDC_STORE                       1016
 #define ID_AsClient                     32777
 #define ID_AsServer                     32778
 #define IDC_STATIC                      -1
@@ -42,7 +43,7 @@
 #define _APS_NO_MFC                     1
 #define _APS_NEXT_RESOURCE_VALUE        136
 #define _APS_NEXT_COMMAND_VALUE         32779
-#define _APS_NEXT_CONTROL_VALUE         1016
+#define _APS_NEXT_CONTROL_VALUE         1017
 #define _APS_NEXT_SYMED_VALUE           110
 #endif
 #endif

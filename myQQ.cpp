@@ -44,6 +44,7 @@ int APIENTRY wWinMain(_In_ HINSTANCE hInstance,_In_opt_ HINSTANCE hPrevInstance,
             DispatchMessage(&msg);
         }
     }
+    WSACleanup();
 
     return (int) msg.wParam;
 }
