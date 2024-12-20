@@ -113,7 +113,7 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
             } // 变量作用域问题
             case ID_AsServer:
             {
-                HWND neoDialog = CreateDialog(hInst, MAKEINTRESOURCE(IDD_SUBSERVER), hWnd, ServerSet);
+                HWND neoDialog = CreateDialog(hInst, MAKEINTRESOURCE(IDD_SUBSERVER), hWnd, Server);
                 ShowWindow(neoDialog, SW_SHOW);
                 break;
             }
