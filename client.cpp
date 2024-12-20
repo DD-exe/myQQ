@@ -133,7 +133,7 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
                     << now.tm_hour << ":" << now.tm_min << ":" << now.tm_sec<< L")\r\n";
                 std::wstring s = ss.str();
                 const WCHAR* ti = s.c_str();
-                file << ti << buffer<<L"\r\n\r\n";
+                file << ti << buffer<<L"\r\r\n";
                 file.close();
             }
             else {
