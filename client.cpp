@@ -97,7 +97,7 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
                 int len = GetWindowTextLength(GetDlgItem(hDlg, IDC_TEXTING2)) + 1;
                 std::wstring text; text.resize(len);
                 GetDlgItemText(hDlg, IDC_TEXTING2,&text[0], len); // 读取发送消息内容
-
+                // TODO:消息发送
                 {
                     HWND sented = GetDlgItem(hDlg, IDC_RECORD);
                     std::wstringstream ss;
@@ -146,7 +146,7 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             }
             break;
         case WM_TIMER:
-
+            // TODO:消息接受
             break;
     }
     return (INT_PTR)FALSE;
