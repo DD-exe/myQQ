@@ -96,63 +96,63 @@ LRESULT CALLBACK WndProc(HWND hWnd, UINT message, WPARAM wParam, LPARAM lParam)
 {
     switch (message)
     {
-    case WM_COMMAND:
-        {
-            int wmId = LOWORD(wParam);
-            // 分析菜单选择:
-            switch (wmId)
+        case WM_COMMAND:
             {
-            case IDM_ABOUT:
-                DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
-                break;
-            case ID_AsClient:
-            {
-                HWND neoDialog = CreateDialog(hInst, MAKEINTRESOURCE(IDD_CLIENTSET), hWnd, ClientSet);
-                ShowWindow(neoDialog, SW_SHOW);
-                break;
-            } // 变量作用域问题
-            case ID_AsServer:
-            {
-                HWND neoDialog = CreateDialog(hInst, MAKEINTRESOURCE(IDD_SUBSERVER), hWnd, Server);
-                ShowWindow(neoDialog, SW_SHOW);
-                break;
+                int wmId = LOWORD(wParam);
+                // 分析菜单选择:
+                switch (wmId)
+                {
+                    case IDM_ABOUT:
+                        DialogBox(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hWnd, About);
+                        break;
+                    case ID_AsClient:
+                    {
+                        HWND neoDialog = CreateDialog(hInst, MAKEINTRESOURCE(IDD_CLIENTSET), hWnd, ClientSet);
+                        ShowWindow(neoDialog, SW_SHOW);
+                        break;
+                    } // 变量作用域问题
+                    case ID_AsServer:
+                    {
+                        HWND neoDialog = CreateDialog(hInst, MAKEINTRESOURCE(IDD_SUBSERVER), hWnd, Server);
+                        ShowWindow(neoDialog, SW_SHOW);
+                        break;
+                    }
+                    case IDM_EXIT:
+                        DestroyWindow(hWnd);
+                        break;
+                    default:
+                        return DefWindowProc(hWnd, message, wParam, lParam);
+                }
             }
-            case IDM_EXIT:
-                DestroyWindow(hWnd);
-                break;
-            default:
-                return DefWindowProc(hWnd, message, wParam, lParam);
-            }
-        }
-        break;
-    case WM_PAINT:
-        {
-            PAINTSTRUCT ps;
-            HDC hdc = BeginPaint(hWnd, &ps);
-            // TODO: 在此处添加使用 hdc 的任何绘图代码...
-            Ellipse(hdc, 0, 0, 800,130); // 绘制一个椭圆
-            TextOut(hdc, 250, 60, L"YourFriend is listening on port L0V3 :)", 39);
-            HBITMAP hBitmap = (HBITMAP)LoadImage(NULL, L"image/touhou.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);           
-            if (hBitmap != NULL)
+            break;
+        case WM_PAINT:
             {
-                HDC hdcMem = CreateCompatibleDC(hdc);
-                HBITMAP hBitmapOld = (HBITMAP)SelectObject(hdcMem, hBitmap);
-                BITMAP bmpInfo; GetObject(hBitmap, sizeof(BITMAP), &bmpInfo);
-                BitBlt(hdc, 600, 130, bmpInfo.bmWidth, bmpInfo.bmHeight, hdcMem, 0, 0, SRCCOPY);
-                SelectObject(hdcMem, hBitmapOld);
-                DeleteDC(hdcMem);
-                DeleteObject(hBitmap);
+                PAINTSTRUCT ps;
+                HDC hdc = BeginPaint(hWnd, &ps);
+                // TODO: 在此处添加使用 hdc 的任何绘图代码...
+                Ellipse(hdc, 0, 0, 800,130); // 绘制一个椭圆
+                TextOut(hdc, 250, 60, L"YourFriend is listening on port L0V3 :)", 39);
+                HBITMAP hBitmap = (HBITMAP)LoadImage(NULL, L"image/touhou.bmp", IMAGE_BITMAP, 0, 0, LR_LOADFROMFILE);           
+                if (hBitmap != NULL)
+                {
+                    HDC hdcMem = CreateCompatibleDC(hdc);
+                    HBITMAP hBitmapOld = (HBITMAP)SelectObject(hdcMem, hBitmap);
+                    BITMAP bmpInfo; GetObject(hBitmap, sizeof(BITMAP), &bmpInfo);
+                    BitBlt(hdc, 600, 130, bmpInfo.bmWidth, bmpInfo.bmHeight, hdcMem, 0, 0, SRCCOPY);
+                    SelectObject(hdcMem, hBitmapOld);
+                    DeleteDC(hdcMem);
+                    DeleteObject(hBitmap);
+                }
+                Ellipse(hdc, 650, 200, 750, 230);
+                Ellipse(hdc, 550, 140, 700, 180); // 绘制气泡
+                EndPaint(hWnd, &ps);
             }
-            Ellipse(hdc, 650, 200, 750, 230);
-            Ellipse(hdc, 550, 140, 700, 180); // 绘制气泡
-            EndPaint(hWnd, &ps);
-        }
-        break;
-    case WM_DESTROY:
-        PostQuitMessage(0);
-        break;
-    default:
-        return DefWindowProc(hWnd, message, wParam, lParam);
+            break;
+        case WM_DESTROY:
+            PostQuitMessage(0);
+            break;
+        default:
+            return DefWindowProc(hWnd, message, wParam, lParam);
     }
     return 0;
 }
@@ -163,16 +163,16 @@ INT_PTR CALLBACK About(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
     UNREFERENCED_PARAMETER(lParam); // 形式主义
     switch (message)
     {
-    case WM_INITDIALOG:
-        return (INT_PTR)TRUE;
-
-    case WM_COMMAND:
-        if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
-        {
-            EndDialog(hDlg, LOWORD(wParam));
+        case WM_INITDIALOG:
             return (INT_PTR)TRUE;
-        }
-        break;
+
+        case WM_COMMAND:
+            if (LOWORD(wParam) == IDOK || LOWORD(wParam) == IDCANCEL)
+            {
+                EndDialog(hDlg, LOWORD(wParam));
+                return (INT_PTR)TRUE;
+            }
+            break;
     }
 
     return (INT_PTR)FALSE;
