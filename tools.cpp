@@ -21,7 +21,7 @@ bool SendData(SOCKET socket, const std::wstring& data) {
 
 std::wstring ReceiveData(SOCKET socket) {    
     uint32_t dataLength = 0;
-    int result = recv(socket, reinterpret_cast<char*>(&dataLength), sizeof(dataLength), 0);// 接收数据长度
+    int result = recv(socket, reinterpret_cast<char*>(&dataLength), sizeof(dataLength), 0); // 接收数据长度
     if (result <= 0)return L"";
     std::vector<char> buffer(dataLength);
     result = recv(socket, buffer.data(), dataLength, 0);

@@ -47,21 +47,25 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         case WM_TIMER:
         {
             serverSession* data = reinterpret_cast<serverSession*>(GetWindowLongPtr(hDlg, GWLP_USERDATA));
-            sockaddr_in clientAddr; SOCKET clientSocket;
+            sockaddr_in clientAddr; SOCKET clientSocket; 
             int size = sizeof(clientAddr);
             clientSocket = accept(data->sock, (sockaddr*)&clientAddr, &size); // 等待接口消息
             if (clientSocket == INVALID_SOCKET)break;
-            u_long len;
-            ioctlsocket(clientSocket, FIONREAD, &len);
-            char* buffer = new char[len];
-            int result = recv(clientSocket, buffer, len, 0);
-            if (result < 0) { closesocket(clientSocket); break; }
-            std::string message=std::string(buffer, result);
-            delete[]buffer;
+            std::wstring message = ReceiveData(clientSocket);
             if (message.empty()) { closesocket(clientSocket); break; } // 字符串形式存储接口消息
+            size_t gunPos = message.find(L'|');
+            size_t portPos = message.find(L':');
+            if (gunPos == std::wstring::npos) { closesocket(clientSocket); break; }//Invalid message format
+
+            SOCKET targetSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+            if (targetSocket == INVALID_SOCKET)break;
+            std::wstring targetIP = message.substr(0, portPos);
+            std::wstring targetPORT = message.substr(portPos + 1, gunPos);
+            std::wstring targetTEXT = message.substr(gunPos + 1);
 
 
-
+            closesocket(clientSocket);
+            closesocket(targetSocket);
             break;
         }
     }
