@@ -34,6 +34,7 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
             data->targetPort = GetDlgItemInt(hDlg, IDC_Port1, &targetBit, TRUE);
             data->myPort = GetDlgItemInt(hDlg, IDC_Port2, &myportBit, TRUE);
             data->sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP); // 定义会话信息
+            if (data->sock == NULL)return 1;
             HWND Warning = GetDlgItem(hDlg, IDC_NeoSTATIC);
             if ((ipBit[0] & ipBit[1] & ipBit[2] & ipBit[3]) == FALSE) {
                 if (Warning != nullptr)SetWindowText(Warning, L"?请输入IP?");
