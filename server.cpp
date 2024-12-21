@@ -62,7 +62,15 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             std::wstring targetIP = message.substr(0, portPos);
             std::wstring targetPORT = message.substr(portPos + 1, gunPos);
             std::wstring targetTEXT = message.substr(gunPos + 1);
-
+            sockaddr_in targetAddr;
+            targetAddr.sin_family = AF_INET;
+            std::string targetIPs = W2S(targetIP);
+            std::string targetPORTs = W2S(targetPORT);
+            int targetPort = std::stoi(targetPORTs);
+            inet_pton(AF_INET, targetIPs.c_str(), &targetAddr.sin_addr);
+            targetAddr.sin_port = htons(targetPort); // 设置转发的socket和addr
+            connect(targetSocket, (sockaddr*)&targetAddr, sizeof(targetAddr));
+            SendData(targetSocket, message);
 
             closesocket(clientSocket);
             closesocket(targetSocket);
