@@ -33,8 +33,6 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
             data->IP[3] = GetDlgItemInt(hDlg, IDC_IP4, &ipBit[3], TRUE);
             data->targetPort = GetDlgItemInt(hDlg, IDC_Port1, &targetBit, TRUE);
             data->myPort = GetDlgItemInt(hDlg, IDC_Port2, &myportBit, TRUE);
-            data->sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP); // 定义会话信息
-            if (data->sock == NULL)return 1;
             HWND Warning = GetDlgItem(hDlg, IDC_NeoSTATIC);
             if ((ipBit[0] & ipBit[1] & ipBit[2] & ipBit[3]) == FALSE) {
                 if (Warning != nullptr)SetWindowText(Warning, L"?请输入IP?");
@@ -46,6 +44,8 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
                 if (Warning != nullptr)SetWindowText(Warning, L"?请输入您的端口?");
             }
             else {
+                data->sock = socket(AF_INET, SOCK_DGRAM, IPPROTO_UDP); // 定义会话信息
+                if (data->sock == INVALID_SOCKET)return 1;
                 HWND neoDialog = CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_CLIENT), hDlg, Client,
                     reinterpret_cast<LPARAM>(data));
                 //HWND neoDialog = CreateDialog(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hDlg, Client);
