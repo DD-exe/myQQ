@@ -51,6 +51,21 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             int size = sizeof(clientAddr);
             clientSocket = accept(data->sock, (sockaddr*)&clientAddr, &size); // 等待接口消息
             if (clientSocket == INVALID_SOCKET)break;
+            {
+                HWND record = GetDlgItem(hDlg, IDC_RECORD);
+                std::string ip = inet_ntoa(clientAddr.sin_addr);
+                unsigned short port = ntohs(clientAddr.sin_port);
+                std::wstringstream ss;
+                ss <<L"接受消息来自" << S2W(ip) <<L":" << port<<L"\r\n";
+                std::wstring s = ss.str();
+                const WCHAR* w = s.c_str();
+                if (record != nullptr) {
+                    int len = GetWindowTextLength(record);
+                    SendMessage(record, EM_SETSEL, len, len);
+                    SendMessage(record, EM_REPLACESEL, TRUE, reinterpret_cast<LPARAM>(w));
+                }
+            } 
+            // 输出连接的客户端地址
             std::wstring message = ReceiveData(clientSocket);
             if (message.empty()) { closesocket(clientSocket); break; } // 字符串形式存储接口消息
             size_t gunPos = message.find(L'|');
@@ -71,7 +86,18 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             targetAddr.sin_port = htons(targetPort); // 设置转发的socket和addr
             connect(targetSocket, (sockaddr*)&targetAddr, sizeof(targetAddr));
             SendData(targetSocket, message);
-
+            {
+                HWND record = GetDlgItem(hDlg, IDC_RECORD);
+                std::wstringstream ss;
+                ss << L"转发消息去往" << targetIP << L":" << targetPORT << L"\r\n";
+                std::wstring s = ss.str();
+                const WCHAR* w = s.c_str();
+                if (record != nullptr) {
+                    int len = GetWindowTextLength(record);
+                    SendMessage(record, EM_SETSEL, len, len);
+                    SendMessage(record, EM_REPLACESEL, TRUE, reinterpret_cast<LPARAM>(w));
+                }
+            }
             closesocket(clientSocket);
             closesocket(targetSocket);
             break;
