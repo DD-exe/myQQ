@@ -53,7 +53,7 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             if (clientSocket == INVALID_SOCKET)break;
             {
                 HWND record = GetDlgItem(hDlg, IDC_RECORD);
-                std::string ip = inet_ntoa(clientAddr.sin_addr);
+                std::string ip = ip2S(clientAddr.sin_addr);
                 unsigned short port = ntohs(clientAddr.sin_port);
                 std::wstringstream ss;
                 ss <<L"接受消息来自" << S2W(ip) <<L":" << port<<L"\r\n";

@@ -1,11 +1,15 @@
 #include "framework.h"
 #include "myQQ.h"
+#define SERVERPORT 8080
+#define SERVERADDR "127.0.0.1"
 
 struct clientSession {
     int IP[4];
-    int targetPort;
-    int myPort;
-    SOCKET sock;
+    int port;
+    SOCKET sendSock;
+    SOCKET getSock;
+    sockaddr_in sendAddr;
+    sockaddr_in getAddr;
 }; // 传参所需struct
 
 // “客户端设置”框的消息处理程序。
@@ -31,8 +35,8 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
                 data->IP[1] = GetDlgItemInt(hDlg, IDC_IP2, &ipBit[1], TRUE);
                 data->IP[2] = GetDlgItemInt(hDlg, IDC_IP3, &ipBit[2], TRUE);
                 data->IP[3] = GetDlgItemInt(hDlg, IDC_IP4, &ipBit[3], TRUE);
-                data->targetPort = GetDlgItemInt(hDlg, IDC_Port1, &targetBit, TRUE);
-                data->myPort = GetDlgItemInt(hDlg, IDC_Port2, &myportBit, TRUE);
+                data->port = GetDlgItemInt(hDlg, IDC_Port1, &targetBit, TRUE);
+                int myPort = GetDlgItemInt(hDlg, IDC_Port2, &myportBit, TRUE);
                 HWND Warning = GetDlgItem(hDlg, IDC_NeoSTATIC);
                 if ((ipBit[0] & ipBit[1] & ipBit[2] & ipBit[3]) == FALSE) {
                     if (Warning != nullptr)SetWindowText(Warning, L"?请输入IP?");
@@ -44,8 +48,21 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
                     if (Warning != nullptr)SetWindowText(Warning, L"?请输入您的端口?");
                 }
                 else {
-                    data->sock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP); // 定义会话信息
-                    if (data->sock == INVALID_SOCKET)return 1;
+                    data->sendSock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+                    data->getSock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP); 
+                    if (data->sendSock == INVALID_SOCKET)return 1;
+                    if (data->getSock == INVALID_SOCKET)return 1; // 初始化socket
+                    data->getAddr.sin_family = AF_INET;
+                    inet_pton(AF_INET, SERVERADDR, &(data->getAddr.sin_addr));
+                    data->getAddr.sin_port = htons(myPort); // 定义getAddr
+                    data->sendAddr.sin_family = AF_INET;
+                    inet_pton(AF_INET, SERVERADDR, &(data->sendAddr.sin_addr));
+                    data->sendAddr.sin_port = htons(SERVERPORT); // 定义sendAddr
+
+                    bind(data->getSock, (struct sockaddr*)&(data->getAddr), sizeof(data->getAddr));
+                    listen(data->getSock, SOMAXCONN);
+                    connect(data->sendSock, (struct sockaddr*)&(data->sendAddr), sizeof(data->sendAddr));
+
                     HWND neoDialog = CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_CLIENT), hDlg, Client,
                         reinterpret_cast<LPARAM>(data));
                     //HWND neoDialog = CreateDialog(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hDlg, Client);
@@ -75,7 +92,7 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             if (data != nullptr) {
                 ss << L"正在和 "<<data->IP[0];
                 for (int i = 1; i < 4; ++i)ss << L"." << data->IP[i];
-                ss << L":" << data->targetPort<<L" 通信……";
+                ss << L":" << data->port<<L" 通信……";
             }
             else {
                 ss << L"正在和 " << L"UNknown" << L" 通信……";
@@ -88,7 +105,8 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         case WM_COMMAND:
             if (LOWORD(wParam) == IDCANCEL)
             {
-                closesocket(data->sock);
+                closesocket(data->getSock);
+                closesocket(data->sendSock);
                 delete data;
                 EndDialog(hDlg, LOWORD(wParam));
                 return (INT_PTR)TRUE;
@@ -105,7 +123,7 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
                     text.pop_back();
                     ss << text << L" to " << data->IP[0];
                     for (int i = 1; i < 4; ++i)ss << L"." << data->IP[i];
-                    ss << L":" << data->targetPort << L"\r\n";
+                    ss << L":" << data->port << L"\r\n";
                     std::wstring s = ss.str();
                     const WCHAR* tit = s.c_str();
                     // 将内容追加到文本框末尾
@@ -129,7 +147,7 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
                     std::wstringstream ss;
                     ss << L"与" << data->IP[0];
                     for (int i = 1; i < 4; ++i)ss << L"." << data->IP[i];
-                    ss << L":" << data->targetPort << L"的记录";
+                    ss << L":" << data->port << L"的记录";
                     std::time_t currentTime; std::time(&currentTime); // 开始获取时间
                     struct tm now; localtime_s(&now, &currentTime);
                     ss << L"(" << (now.tm_year + 1900) << "-" << (now.tm_mon + 1) << "-" << now.tm_mday << " "

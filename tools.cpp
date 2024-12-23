@@ -29,3 +29,11 @@ std::wstring ReceiveData(SOCKET socket) {
 
     return S2W(std::string(buffer.data(), result));
 }
+
+std::string ip2S(struct in_addr addr) {
+    char ipc[INET_ADDRSTRLEN];
+    inet_ntop(AF_INET, &addr, ipc, INET_ADDRSTRLEN);
+    std::string ip(ipc);
+
+    return ip;
+}
