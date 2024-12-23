@@ -1,6 +1,5 @@
 #include "framework.h"
 #include "myQQ.h"
-#define SERVERPORT 8080
 struct serverSession {
     sockaddr_in addr;
     SOCKET sock;
@@ -29,7 +28,7 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             bind(data->sock, (sockaddr*)&(data->addr), sizeof(data->addr)); // 绑定socket和addr
             listen(data->sock, SOMAXCONN); // 留给自己：注意看
             SetWindowLongPtr(hDlg, GWLP_USERDATA, reinterpret_cast<LPARAM>(data)); // 以上为server socket初始化
-            SetTimer(hDlg,0,1000,(TIMERPROC)NULL);
+            SetTimer(hDlg,0,40000,(TIMERPROC)NULL);
             return (INT_PTR)TRUE;
         }
         case WM_COMMAND:
@@ -56,7 +55,7 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
                 std::string ip = ip2S(clientAddr.sin_addr);
                 unsigned short port = ntohs(clientAddr.sin_port);
                 std::wstringstream ss;
-                ss <<L"接受消息来自" << S2W(ip) <<L":" << port<<L"\r\n";
+                ss <<L"接受消息来自" << S2W(ip) <<L":" << port <<L"\r\n";
                 std::wstring s = ss.str();
                 recordMaker(s, record);
             } 
@@ -65,12 +64,12 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             if (message.empty()) { closesocket(clientSocket); break; } // 字符串形式存储接口消息
             size_t gunPos = message.find(L'|');
             size_t portPos = message.find(L':');
-            if (gunPos == std::wstring::npos) { closesocket(clientSocket); break; }//Invalid message format
+            if (gunPos == std::wstring::npos || portPos == std::wstring::npos) { closesocket(clientSocket); break; }//Invalid message format
 
             SOCKET targetSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
             if (targetSocket == INVALID_SOCKET)break;
             std::wstring targetIP = message.substr(0, portPos);
-            std::wstring targetPORT = message.substr(portPos + 1, gunPos);
+            std::wstring targetPORT = message.substr(portPos + 1, gunPos-(portPos + 1));
             std::wstring targetTEXT = message.substr(gunPos + 1);
             sockaddr_in targetAddr;
             targetAddr.sin_family = AF_INET;
@@ -86,12 +85,7 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
                 std::wstringstream ss;
                 ss << L"转发消息去往" << targetIP << L":" << targetPORT << L"\r\n";
                 std::wstring s = ss.str();
-                const WCHAR* w = s.c_str();
-                if (record != nullptr) {
-                    int len = GetWindowTextLength(record);
-                    SendMessage(record, EM_SETSEL, len, len);
-                    SendMessage(record, EM_REPLACESEL, TRUE, reinterpret_cast<LPARAM>(w));
-                }
+                recordMaker(s, record);
             }
             closesocket(clientSocket);
             closesocket(targetSocket);

@@ -1,7 +1,5 @@
 #include "framework.h"
 #include "myQQ.h"
-#define SERVERPORT 8080
-#define SERVERADDR "127.0.0.1"
 
 struct clientSession {
     int IP[4];
@@ -61,7 +59,7 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 
                     bind(data->getSock, (struct sockaddr*)&(data->getAddr), sizeof(data->getAddr));
                     listen(data->getSock, SOMAXCONN);
-                    connect(data->sendSock, (struct sockaddr*)&(data->sendAddr), sizeof(data->sendAddr));
+                    //connect(data->sendSock, (struct sockaddr*)&(data->sendAddr), sizeof(data->sendAddr));
 
                     HWND neoDialog = CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_CLIENT), hDlg, Client,
                         reinterpret_cast<LPARAM>(data));
@@ -99,6 +97,7 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             std::wstring s = ss.str();
             const WCHAR* tit = s.c_str();
             if (title != nullptr) SetWindowText(title, tit);
+            SetTimer(hDlg, 0, 40000, (TIMERPROC)NULL);
             return (INT_PTR)TRUE;
         }
         case WM_COMMAND:
@@ -113,6 +112,7 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
                 return (INT_PTR)TRUE;
             }
             else if (LOWORD(wParam) == IDSENT) {
+                connect(data->sendSock, (struct sockaddr*)&(data->sendAddr), sizeof(data->sendAddr));
                 int len = GetWindowTextLength(GetDlgItem(hDlg, IDC_TEXTING2)) + 1;
                 std::wstring text; text.resize(len);
                 GetDlgItemText(hDlg, IDC_TEXTING2, &text[0], len); // 读取发送消息内容
@@ -175,6 +175,20 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             int size = sizeof(clientAddr);
             clientSocket = accept(data->getSock, (sockaddr*)&clientAddr, &size);
             if (clientSocket == INVALID_SOCKET)break;
+            std::wstring message = ReceiveData(clientSocket);
+            if (message.empty()) { closesocket(clientSocket); break; } // 字符串形式存储接口消息
+            size_t gunPos = message.find(L'|');
+            size_t portPos = message.find(L':');
+            std::wstring ip = message.substr(0, portPos);
+            std::wstring port = message.substr(portPos + 1, gunPos - (portPos + 1));
+            std::wstring text = message.substr(gunPos + 1);
+            HWND record = GetDlgItem(hDlg, IDC_RECORD);
+            std::wstringstream ss;
+            text.pop_back();
+            ss << L"receive:" << text;
+            ss << " from " << ip << ":" << port<<L"\r\n";
+            std::wstring s = ss.str();
+            recordMaker(s, record);
 
             break;
         }

@@ -9,6 +9,8 @@
 #include <ctime>
 #include <codecvt>
 #include <vector>
+#define SERVERPORT 30000
+#define SERVERADDR "127.0.0.1"
 INT_PTR CALLBACK ClientSet(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK Client(HWND, UINT, WPARAM, LPARAM); // Client
 INT_PTR CALLBACK Server(HWND, UINT, WPARAM, LPARAM); // Server
