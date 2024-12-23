@@ -13,6 +13,8 @@ std::wstring S2W(const std::string& utf8String) { //string to wstring
 bool SendData(SOCKET socket, const std::wstring& data) {
     std::string utf8Data = W2S(data);
     uint32_t dataLength = static_cast<uint32_t>(utf8Data.size());
+    // char error[100]; int len = 100; getsockopt(socket, SOL_SOCKET, SO_ERROR, (char*)&error, &len); ok!
+    // char error[100]; int len = 100; getsockopt(socket, SOL_SOCKET, SO_CONNECT_TIME, error, &len);
     if (send(socket, reinterpret_cast<const char*>(&dataLength), sizeof(dataLength), 0) == SOCKET_ERROR)return false;
     if (send(socket, utf8Data.c_str(), utf8Data.size(), 0) == SOCKET_ERROR)return false;
 

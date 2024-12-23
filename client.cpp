@@ -121,6 +121,7 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
                 for (int i = 1; i < 4; ++i)ss << L"." << data->IP[i];
                 ss << L":" << data->port << L"|" << text;
                 std::wstring message = ss.str();
+                //char error[100]; int len1 = 100; getsockopt(data->sendSock, SOL_SOCKET, SO_ERROR, (char*)&error, &len1);
                 if(SendData(data->sendSock, message))// ÏûÏ¢·¢ËÍ
                 {
                     HWND record = GetDlgItem(hDlg, IDC_RECORD);

@@ -29,7 +29,7 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             bind(data->sock, (sockaddr*)&(data->addr), sizeof(data->addr)); // 绑定socket和addr
             listen(data->sock, SOMAXCONN); // 留给自己：注意看
             SetWindowLongPtr(hDlg, GWLP_USERDATA, reinterpret_cast<LPARAM>(data)); // 以上为server socket初始化
-
+            SetTimer(hDlg,0,1000,(TIMERPROC)NULL);
             return (INT_PTR)TRUE;
         }
         case WM_COMMAND:
@@ -58,12 +58,7 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
                 std::wstringstream ss;
                 ss <<L"接受消息来自" << S2W(ip) <<L":" << port<<L"\r\n";
                 std::wstring s = ss.str();
-                const WCHAR* w = s.c_str();
-                if (record != nullptr) {
-                    int len = GetWindowTextLength(record);
-                    SendMessage(record, EM_SETSEL, len, len);
-                    SendMessage(record, EM_REPLACESEL, TRUE, reinterpret_cast<LPARAM>(w));
-                }
+                recordMaker(s, record);
             } 
             // 输出连接的客户端地址
             std::wstring message = ReceiveData(clientSocket);
