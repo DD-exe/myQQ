@@ -16,4 +16,5 @@ std::string W2S(const std::wstring& wideString);
 std::wstring S2W(const std::string& utf8String);
 std::string ip2S(struct in_addr addr);
 bool SendData(SOCKET socket, const std::wstring& data);
-std::wstring ReceiveData(SOCKET socket); // tools
+std::wstring ReceiveData(SOCKET socket);
+void recordMaker(std::wstring s, HWND record); // tools

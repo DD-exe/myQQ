@@ -37,3 +37,13 @@ std::string ip2S(struct in_addr addr) {
 
     return ip;
 }
+
+void recordMaker(std::wstring s, HWND record) {
+    const WCHAR* tit = s.c_str();
+    // 将内容追加到文本框末尾
+    if (record != nullptr) {
+        int len = GetWindowTextLength(record);
+        SendMessage(record, EM_SETSEL, len, len);
+        SendMessage(record, EM_REPLACESEL, TRUE, reinterpret_cast<LPARAM>(tit));
+    }
+}

@@ -79,7 +79,6 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 // “客户端”框的消息处理程序。
 INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
-    clientSession* data = reinterpret_cast<clientSession*>(GetWindowLongPtr(hDlg, GWLP_USERDATA)); 
     // 获取存储的IP和端口
     switch (message)
     {
@@ -103,6 +102,8 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             return (INT_PTR)TRUE;
         }
         case WM_COMMAND:
+        {
+            clientSession* data = reinterpret_cast<clientSession*>(GetWindowLongPtr(hDlg, GWLP_USERDATA));
             if (LOWORD(wParam) == IDCANCEL)
             {
                 closesocket(data->getSock);
@@ -114,26 +115,26 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             else if (LOWORD(wParam) == IDSENT) {
                 int len = GetWindowTextLength(GetDlgItem(hDlg, IDC_TEXTING2)) + 1;
                 std::wstring text; text.resize(len);
-                GetDlgItemText(hDlg, IDC_TEXTING2,&text[0], len); // 读取发送消息内容
-                // TODO:消息发送
-
+                GetDlgItemText(hDlg, IDC_TEXTING2, &text[0], len); // 读取发送消息内容
+                std::wstringstream ss;
+                ss<< data->IP[0];
+                for (int i = 1; i < 4; ++i)ss << L"." << data->IP[i];
+                ss << L":" << data->port << L"|" << text;
+                std::wstring message = ss.str();
+                if(SendData(data->sendSock, message))// 消息发送
                 {
-                    HWND sented = GetDlgItem(hDlg, IDC_RECORD);
+                    HWND record = GetDlgItem(hDlg, IDC_RECORD);
                     std::wstringstream ss;
                     text.pop_back();
-                    ss << text << L" to " << data->IP[0];
+                    ss << L"send:" << text;
+                    ss << L" to " << data->IP[0];
                     for (int i = 1; i < 4; ++i)ss << L"." << data->IP[i];
                     ss << L":" << data->port << L"\r\n";
                     std::wstring s = ss.str();
-                    const WCHAR* tit = s.c_str();
-                    // 将内容追加到文本框末尾
-                    if (sented != nullptr) {
-                        int len = GetWindowTextLength(sented);
-                        SendMessage(sented, EM_SETSEL, len, len);
-                        SendMessage(sented, EM_REPLACESEL, TRUE, reinterpret_cast<LPARAM>(tit));
-                    }
-                } // 阶段测试用代码
-                return (INT_PTR)TRUE;
+                    recordMaker(s, record);
+                    return (INT_PTR)TRUE;
+                }      
+                // 消息显示
             }
             else if (LOWORD(wParam) == IDC_STORE) {
                 HWND record = GetDlgItem(hDlg, IDC_RECORD);
@@ -151,10 +152,10 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
                     std::time_t currentTime; std::time(&currentTime); // 开始获取时间
                     struct tm now; localtime_s(&now, &currentTime);
                     ss << L"(" << (now.tm_year + 1900) << "-" << (now.tm_mon + 1) << "-" << now.tm_mday << " "
-                        << now.tm_hour << ":" << now.tm_min << ":" << now.tm_sec<< L")\r\n";
+                        << now.tm_hour << ":" << now.tm_min << ":" << now.tm_sec << L")\r\n";
                     std::wstring s = ss.str();
                     const WCHAR* ti = s.c_str();
-                    file << ti << buffer<<L"\r\r\n";
+                    file << ti << buffer << L"\r\r\n";
                     file.close();
                 }
                 else {
@@ -164,10 +165,18 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
                 return (INT_PTR)TRUE;
             }
             break;
+        }
         case WM_TIMER:
+        {
+            clientSession* data = reinterpret_cast<clientSession*>(GetWindowLongPtr(hDlg, GWLP_USERDATA));
             // TODO:消息接受
+            sockaddr_in clientAddr; SOCKET clientSocket;
+            int size = sizeof(clientAddr);
+            clientSocket = accept(data->getSock, (sockaddr*)&clientAddr, &size);
+            if (clientSocket == INVALID_SOCKET)break;
 
             break;
+        }
     }
     return (INT_PTR)FALSE;
 }
