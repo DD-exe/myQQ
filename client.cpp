@@ -167,16 +167,13 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             }
             break;
         }
-        case WM_TIMER:
+        case WM_LISTEN:
         {
             clientSession* data = reinterpret_cast<clientSession*>(GetWindowLongPtr(hDlg, GWLP_USERDATA));
-            // TODO:消息接受
-            sockaddr_in clientAddr; SOCKET clientSocket;
-            int size = sizeof(clientAddr);
-            clientSocket = accept(data->getSock, (sockaddr*)&clientAddr, &size);
-            if (clientSocket == INVALID_SOCKET)break;
-            std::wstring message = ReceiveData(clientSocket);
-            if (message.empty()) { closesocket(clientSocket); break; } // 字符串形式存储接口消息
+            returnData* cData = reinterpret_cast<returnData*>(lParam);
+            sockaddr_in clientAddr = cData->clientAddr;
+            std::wstring message = cData->message;
+            delete cData; // 结束子进程传入信息处理
             size_t gunPos = message.find(L'|');
             size_t portPos = message.find(L':');
             std::wstring ip = message.substr(0, portPos);

@@ -3,6 +3,8 @@
 struct serverSession {
     sockaddr_in addr;
     SOCKET sock;
+    listenData cpData;
+    HANDLE cp;
 };
 // “服务端”框的消息处理程序。
 INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
@@ -29,6 +31,10 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             listen(data->sock, SOMAXCONN); // 留给自己：注意看
             SetWindowLongPtr(hDlg, GWLP_USERDATA, reinterpret_cast<LPARAM>(data)); // 以上为server socket初始化
 
+            data->cpData.hWndParent = hDlg;
+            data->cpData.keep = 1;
+            data->cpData.sock = data->sock;
+            data->cp = (HANDLE)(_beginthreadex(NULL, 0, listeningPort, &(data->cpData), 0, NULL)); // 设置cp并开启
 
             // SetTimer(hDlg,0,40000,(TIMERPROC)NULL);
             return (INT_PTR)TRUE;
@@ -39,19 +45,21 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             if (LOWORD(wParam) == IDCANCEL)
             {
                 closesocket(data->sock);
+                data->cpData.keep = 0;
+                WaitForSingleObject(data->cp, INFINITE);
                 delete data;
                 EndDialog(hDlg, LOWORD(wParam));
                 return (INT_PTR)TRUE;
             }
             break;
         }
-        case WM_TIMER:
+        case WM_LISTEN:
         {
             serverSession* data = reinterpret_cast<serverSession*>(GetWindowLongPtr(hDlg, GWLP_USERDATA));
-            sockaddr_in clientAddr; SOCKET clientSocket; 
-            int size = sizeof(clientAddr);
-            clientSocket = accept(data->sock, (sockaddr*)&clientAddr, &size); // 等待接口消息
-            if (clientSocket == INVALID_SOCKET)break;
+            returnData* cData = reinterpret_cast<returnData*>(lParam);
+            sockaddr_in clientAddr = cData->clientAddr;
+            std::wstring message = cData->message;
+            delete cData; // 结束子进程传入信息处理
             {
                 HWND record = GetDlgItem(hDlg, IDC_RECORD);
                 std::string ip = ip2S(clientAddr.sin_addr);
@@ -62,11 +70,9 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
                 recordMaker(s, record);
             } 
             // 输出连接的客户端地址
-            std::wstring message = ReceiveData(clientSocket);
-            if (message.empty()) { closesocket(clientSocket); break; } // 字符串形式存储接口消息
             size_t gunPos = message.find(L'|');
             size_t portPos = message.find(L':');
-            if (gunPos == std::wstring::npos || portPos == std::wstring::npos) { closesocket(clientSocket); break; }//Invalid message format
+            if (gunPos == std::wstring::npos || portPos == std::wstring::npos) { break; }//Invalid message format
 
             SOCKET targetSocket = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
             if (targetSocket == INVALID_SOCKET)break;
@@ -89,7 +95,7 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
                 std::wstring s = ss.str();
                 recordMaker(s, record);
             }
-            closesocket(clientSocket);
+            // 输出转发的消息去向
             closesocket(targetSocket);
             break;
         }

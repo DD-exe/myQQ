@@ -134,6 +134,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="client.cpp" />
+    <ClCompile Include="listen.cpp" />
     <ClCompile Include="myQQ.cpp" />
     <ClCompile Include="server.cpp" />
     <ClCompile Include="tools.cpp" />

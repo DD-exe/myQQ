@@ -1,18 +1,18 @@
 #include "framework.h"
 #include "myQQ.h"
-struct listenData {
-    HWND hWndParent;
-    bool keep;
-};
-
 unsigned __stdcall listeningPort(void* param) {
     listenData* data = (listenData*)param; // 获取主对话框的窗口句柄
-
-    // 模拟子线程逻辑，定期向主对话框发送消息
     while (data->keep) {
-        
-        PostMessage(data->hWndParent, WM_LISTEN, 0, 0);
+        returnData* cData=new returnData; // 记得在主程那边用完delete
+        SOCKET clientSocket;
+        int size = sizeof(cData->clientAddr);
+        clientSocket = accept(data->sock, (sockaddr*)&(cData->clientAddr), &size); // 等待接口消息
+        // 输出连接的客户端地址
+        cData->message = ReceiveData(clientSocket);
+        if (cData->message.empty()) { closesocket(clientSocket); continue; }
+        PostMessage(data->hWndParent, WM_LISTEN, 0, (LPARAM)cData);
+        closesocket(clientSocket);
     }
 
-    return 0; // 线程结束
+    return 0;
 }
