@@ -29,14 +29,15 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             data->addr.sin_port = htons(SERVERPORT); // 监听端口
             bind(data->sock, (sockaddr*)&(data->addr), sizeof(data->addr)); // 绑定socket和addr
             listen(data->sock, SOMAXCONN); // 留给自己：注意看
-            SetWindowLongPtr(hDlg, GWLP_USERDATA, reinterpret_cast<LPARAM>(data)); // 以上为server socket初始化
+            // 以上为server socket初始化
 
             data->cpData.hWndParent = hDlg;
             data->cpData.keep = 1;
             data->cpData.sock = data->sock;
             data->cp = (HANDLE)(_beginthreadex(NULL, 0, listeningPort, &(data->cpData), 0, NULL)); // 设置cp并开启
 
-            // SetTimer(hDlg,0,40000,(TIMERPROC)NULL);
+            SetWindowLongPtr(hDlg, GWLP_USERDATA, reinterpret_cast<LPARAM>(data));
+
             return (INT_PTR)TRUE;
         }
         case WM_COMMAND:

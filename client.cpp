@@ -8,6 +8,8 @@ struct clientSession {
     SOCKET getSock;
     sockaddr_in sendAddr;
     sockaddr_in getAddr;
+    listenData cpData;
+    HANDLE cp;
 }; // 传参所需struct
 
 // “客户端设置”框的消息处理程序。
@@ -59,8 +61,7 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
 
                     bind(data->getSock, (struct sockaddr*)&(data->getAddr), sizeof(data->getAddr));
                     listen(data->getSock, SOMAXCONN);
-                    //connect(data->sendSock, (struct sockaddr*)&(data->sendAddr), sizeof(data->sendAddr));
-
+                   
                     HWND neoDialog = CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_CLIENT), hDlg, Client,
                         reinterpret_cast<LPARAM>(data));
                     //HWND neoDialog = CreateDialog(hInst, MAKEINTRESOURCE(IDD_ABOUTBOX), hDlg, Client);
@@ -83,7 +84,11 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
         case WM_INITDIALOG:
         {
             clientSession* data = reinterpret_cast<clientSession*>(lParam);
-            SetWindowLongPtr(hDlg, GWLP_USERDATA, lParam); // 初始化会话信息，将其作为窗口变量存储
+            data->cpData.hWndParent = hDlg;
+            data->cpData.keep = 1;
+            data->cpData.sock = data->getSock;
+            data->cp = (HANDLE)(_beginthreadex(NULL, 0, listeningPort, &(data->cpData), 0, NULL));
+            SetWindowLongPtr(hDlg, GWLP_USERDATA, reinterpret_cast<LPARAM>(data)); // 初始化会话信息，将其作为窗口变量存储
             HWND title = GetDlgItem(hDlg, IDC_CLIENTtitle);
             std::wstringstream ss;
             if (data != nullptr) {
@@ -107,6 +112,8 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             {
                 closesocket(data->getSock);
                 closesocket(data->sendSock);
+                data->cpData.keep = 0;
+                WaitForSingleObject(data->cp, INFINITE);
                 delete data;
                 EndDialog(hDlg, LOWORD(wParam));
                 return (INT_PTR)TRUE;
