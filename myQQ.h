@@ -11,6 +11,7 @@
 #include <vector>
 #define SERVERPORT 30000
 #define SERVERADDR "127.0.0.1"
+#define WM_LISTEN WM_USER+1
 INT_PTR CALLBACK ClientSet(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK Client(HWND, UINT, WPARAM, LPARAM); // Client
 INT_PTR CALLBACK Server(HWND, UINT, WPARAM, LPARAM); // Server
@@ -20,3 +21,4 @@ std::string ip2S(struct in_addr addr);
 bool SendData(SOCKET socket, const std::wstring& data);
 std::wstring ReceiveData(SOCKET socket);
 void recordMaker(std::wstring s, HWND record); // tools
+unsigned __stdcall listeningPort(void* param); // listen

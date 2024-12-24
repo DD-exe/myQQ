@@ -97,7 +97,7 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             std::wstring s = ss.str();
             const WCHAR* tit = s.c_str();
             if (title != nullptr) SetWindowText(title, tit);
-            SetTimer(hDlg, 0, 40000, (TIMERPROC)NULL);
+            // SetTimer(hDlg, 0, 40000, (TIMERPROC)NULL);
             return (INT_PTR)TRUE;
         }
         case WM_COMMAND:

@@ -28,7 +28,9 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             bind(data->sock, (sockaddr*)&(data->addr), sizeof(data->addr)); // 绑定socket和addr
             listen(data->sock, SOMAXCONN); // 留给自己：注意看
             SetWindowLongPtr(hDlg, GWLP_USERDATA, reinterpret_cast<LPARAM>(data)); // 以上为server socket初始化
-            SetTimer(hDlg,0,40000,(TIMERPROC)NULL);
+
+
+            // SetTimer(hDlg,0,40000,(TIMERPROC)NULL);
             return (INT_PTR)TRUE;
         }
         case WM_COMMAND:
