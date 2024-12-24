@@ -61,16 +61,13 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             sockaddr_in clientAddr = cData->clientAddr;
             std::wstring message = cData->message;
             delete cData; // 结束子进程传入信息处理
-            {
-                HWND record = GetDlgItem(hDlg, IDC_RECORD);
-                std::string ip = ip2S(clientAddr.sin_addr);
-                unsigned short port = ntohs(clientAddr.sin_port);
-                std::wstringstream ss;
-                ss <<L"接受消息来自" << S2W(ip) <<L":" << port <<L"\r\n";
-                std::wstring s = ss.str();
-                recordMaker(s, record);
-            } 
-            // 输出连接的客户端地址
+            HWND record = GetDlgItem(hDlg, IDC_RECORD);
+            std::string ip = ip2S(clientAddr.sin_addr);
+            unsigned short port = ntohs(clientAddr.sin_port);
+            std::wstringstream ss1;
+            ss1 <<L"接受消息来自" << S2W(ip) <<L":" << port <<L"\r\n";
+            std::wstring s1 = ss1.str();
+            recordMaker(s1, record); // 输出连接的客户端地址
             size_t gunPos = message.find(L'|');
             size_t portPos = message.find(L':');
             if (gunPos == std::wstring::npos || portPos == std::wstring::npos) { break; }//Invalid message format
@@ -87,16 +84,15 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             int targetPort = std::stoi(targetPORTs);
             inet_pton(AF_INET, targetIPs.c_str(), &targetAddr.sin_addr);
             targetAddr.sin_port = htons(targetPort); // 设置转发的socket和addr
+            std::wstringstream ss3;
+            ss3 << S2W(ip) << L":" << port << L"|" << targetTEXT;
+            std::wstring message2 = ss3.str();
             connect(targetSocket, (sockaddr*)&targetAddr, sizeof(targetAddr));
-            SendData(targetSocket, message);
-            {
-                HWND record = GetDlgItem(hDlg, IDC_RECORD);
-                std::wstringstream ss;
-                ss << L"转发消息去往" << targetIP << L":" << targetPORT << L"\r\n";
-                std::wstring s = ss.str();
-                recordMaker(s, record);
-            }
-            // 输出转发的消息去向
+            SendData(targetSocket, message2);
+            std::wstringstream ss2;
+            ss2 << L"转发消息去往" << targetIP << L":" << targetPORT << L"\r\n";
+            std::wstring s2 = ss2.str();
+            recordMaker(s2, record); // 输出转发的消息去向
             closesocket(targetSocket);
             break;
         }

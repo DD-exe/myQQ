@@ -3,7 +3,7 @@
 
 struct clientSession {
     int IP[4];
-    int port;
+    unsigned short port;
     SOCKET sendSock;
     SOCKET getSock;
     sockaddr_in sendAddr;
@@ -11,7 +11,7 @@ struct clientSession {
     listenData cpData;
     HANDLE cp;
 }; // 传参所需struct
-
+int tiaoshi = 0;
 // “客户端设置”框的消息处理程序。
 INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
 {
@@ -36,7 +36,7 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
                 data->IP[2] = GetDlgItemInt(hDlg, IDC_IP3, &ipBit[2], TRUE);
                 data->IP[3] = GetDlgItemInt(hDlg, IDC_IP4, &ipBit[3], TRUE);
                 data->port = GetDlgItemInt(hDlg, IDC_Port1, &targetBit, TRUE);
-                int myPort = GetDlgItemInt(hDlg, IDC_Port2, &myportBit, TRUE);
+                unsigned short myPort = GetDlgItemInt(hDlg, IDC_Port2, &myportBit, TRUE);
                 HWND Warning = GetDlgItem(hDlg, IDC_NeoSTATIC);
                 if ((ipBit[0] & ipBit[1] & ipBit[2] & ipBit[3]) == FALSE) {
                     if (Warning != nullptr)SetWindowText(Warning, L"?请输入IP?");
@@ -48,9 +48,9 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
                     if (Warning != nullptr)SetWindowText(Warning, L"?请输入您的端口?");
                 }
                 else {
-                    data->sendSock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+                    data->sendSock = INVALID_SOCKET;
                     data->getSock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP); 
-                    if (data->sendSock == INVALID_SOCKET)return 1;
+                    //if (data->sendSock == INVALID_SOCKET)return 1;
                     if (data->getSock == INVALID_SOCKET)return 1; // 初始化socket
                     data->getAddr.sin_family = AF_INET;
                     inet_pton(AF_INET, SERVERADDR, &(data->getAddr.sin_addr));
@@ -60,6 +60,7 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
                     data->sendAddr.sin_port = htons(SERVERPORT); // 定义sendAddr
 
                     bind(data->getSock, (struct sockaddr*)&(data->getAddr), sizeof(data->getAddr));
+                    //bind(data->sendSock, (struct sockaddr*)&(data->getAddr), sizeof(data->getAddr));
                     listen(data->getSock, SOMAXCONN);
                    
                     HWND neoDialog = CreateDialogParam(hInst, MAKEINTRESOURCE(IDD_CLIENT), hDlg, Client,
@@ -111,7 +112,7 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             if (LOWORD(wParam) == IDCANCEL)
             {
                 closesocket(data->getSock);
-                closesocket(data->sendSock);
+                //closesocket(data->sendSock);
                 data->cpData.keep = 0;
                 WaitForSingleObject(data->cp, INFINITE);
                 delete data;
@@ -119,6 +120,8 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
                 return (INT_PTR)TRUE;
             }
             else if (LOWORD(wParam) == IDSENT) {
+                data->sendSock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
+                bind(data->sendSock, (struct sockaddr*)&(data->getAddr), sizeof(data->getAddr));
                 connect(data->sendSock, (struct sockaddr*)&(data->sendAddr), sizeof(data->sendAddr));
                 int len = GetWindowTextLength(GetDlgItem(hDlg, IDC_TEXTING2)) + 1;
                 std::wstring text; text.resize(len);
@@ -143,6 +146,7 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
                     return (INT_PTR)TRUE;
                 }      
                 // 消息显示
+                closesocket(data->sendSock);
             }
             else if (LOWORD(wParam) == IDC_STORE) {
                 HWND record = GetDlgItem(hDlg, IDC_RECORD);
