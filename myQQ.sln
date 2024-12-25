@@ -1,9 +1,11 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
-VisualStudioVersion = 17.12.35527.113 d17.12
+VisualStudioVersion = 17.12.35527.113
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "myQQ", "myQQ.vcxproj", "{3B6AFBF6-FACD-45D3-A44E-37CF0A090E77}"
+EndProject
+Project("{54435603-DBB4-11D2-8724-00A0C9A8B90C}") = "myQQSet", "..\myQQSet\myQQSet\myQQSet.vdproj", "{38C43710-D52E-471A-89C1-5B76D1291E0A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -21,6 +23,10 @@ Global
 		{3B6AFBF6-FACD-45D3-A44E-37CF0A090E77}.Release|x64.Build.0 = Release|x64
 		{3B6AFBF6-FACD-45D3-A44E-37CF0A090E77}.Release|x86.ActiveCfg = Release|Win32
 		{3B6AFBF6-FACD-45D3-A44E-37CF0A090E77}.Release|x86.Build.0 = Release|Win32
+		{38C43710-D52E-471A-89C1-5B76D1291E0A}.Debug|x64.ActiveCfg = Debug
+		{38C43710-D52E-471A-89C1-5B76D1291E0A}.Debug|x86.ActiveCfg = Debug
+		{38C43710-D52E-471A-89C1-5B76D1291E0A}.Release|x64.ActiveCfg = Release
+		{38C43710-D52E-471A-89C1-5B76D1291E0A}.Release|x86.ActiveCfg = Release
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

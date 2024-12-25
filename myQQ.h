@@ -11,7 +11,7 @@
 #include <vector>
 #include <process.h>
 #define SERVERPORT 30000
-#define SERVERADDR "127.0.0.1"
+#define SERVERADDR "10.180.126.40"
 #define WM_LISTEN WM_USER+1
 INT_PTR CALLBACK ClientSet(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK Client(HWND, UINT, WPARAM, LPARAM); // Client
