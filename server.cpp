@@ -87,7 +87,7 @@ INT_PTR CALLBACK Server(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             std::wstringstream ss3;
             ss3 << S2W(ip) << L":" << port << L"|" << targetTEXT;
             std::wstring message2 = ss3.str();
-            connect(targetSocket, (sockaddr*)&targetAddr, sizeof(targetAddr));
+            if(connect(targetSocket, (sockaddr*)&targetAddr, sizeof(targetAddr))== SOCKET_ERROR)break;
             SendData(targetSocket, message2);
             std::wstringstream ss2;
             ss2 << L"转发消息去往" << targetIP << L":" << targetPORT << L"\r\n";

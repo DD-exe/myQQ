@@ -132,7 +132,7 @@ INT_PTR CALLBACK Client(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam)
             else if (LOWORD(wParam) == IDSENT) {
                 data->sendSock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP);
                 bind(data->sendSock, (struct sockaddr*)&(data->getAddr), sizeof(data->getAddr));
-                connect(data->sendSock, (struct sockaddr*)&(data->sendAddr), sizeof(data->sendAddr));
+                if (connect(data->sendSock, (struct sockaddr*)&(data->sendAddr), sizeof(data->sendAddr)) == SOCKET_ERROR)break;
                 int len = GetWindowTextLength(GetDlgItem(hDlg, IDC_TEXTING2)) + 1;
                 std::wstring text; text.resize(len);
                 GetDlgItemText(hDlg, IDC_TEXTING2, &text[0], len); // 读取发送消息内容
