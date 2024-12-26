@@ -5,6 +5,7 @@
 项目采用了多线程设计，将客户端和服务端集成化。用户可仅通过打开不同窗口，建立任意多的客户端和服务端。<br>
 项目框架如下：
 ```
+myQQ
 │  .gitignore
 │  client.cpp					// 客户端、客户端设置callback函数
 │  framework.h
@@ -23,7 +24,6 @@
 │  server.cpp					// 服务端callback函数
 │  targetver.h
 │  tools.cpp					// 宽字符串处理和tools层实现函数
-│  UpgradeLog.htm
 │
 ├─icon						// 图标文件和源文件
 │      myQQ.ico
