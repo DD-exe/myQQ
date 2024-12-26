@@ -17,7 +17,6 @@
 #define IDB_BITMAP2                     134
 #define IDD_CLIENT                      135
 #define IDD_SUBCLIENT                   135
-#define IDD_SUBCLIENT1                  136
 #define IDD_SUBSERVER                   136
 #define IDC_MONTHCALENDAR1              1000
 #define IDC_IP                          1003
@@ -26,11 +25,16 @@
 #define IDC_IP4                         1006
 #define IDC_Port1                       1007
 #define IDC_Port2                       1008
+#define IDC_IP5                         1009
 #define IDC_NeoSTATIC                   1010
 #define IDSENT                          1011
+#define IDC_IP6                         1011
 #define IDC_TEXTING                     1012
+#define IDC_IP7                         1012
 #define IDC_RECORD                      1013
+#define IDC_IP8                         1013
 #define IDC_TEXTING2                    1014
+#define IDC_Port3                       1014
 #define IDC_CLIENTtitle                 1015
 #define IDC_STORE                       1016
 #define ID_AsClient                     32777

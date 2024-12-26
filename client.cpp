@@ -29,7 +29,7 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
             }
             else if (LOWORD(wParam) == IDOK) {
                 clientSession* data = new clientSession;
-                BOOL ipBit[4] = { FALSE, FALSE, FALSE, FALSE };
+                BOOL ipBit[8] = { FALSE, FALSE, FALSE, FALSE };
                 BOOL myportBit = FALSE; BOOL targetBit = FALSE;
                 data->IP[0] = GetDlgItemInt(hDlg, IDC_IP, &ipBit[0], TRUE);
                 data->IP[1] = GetDlgItemInt(hDlg, IDC_IP2, &ipBit[1], TRUE);
@@ -37,6 +37,12 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
                 data->IP[3] = GetDlgItemInt(hDlg, IDC_IP4, &ipBit[3], TRUE);
                 data->port = GetDlgItemInt(hDlg, IDC_Port1, &targetBit, TRUE);
                 unsigned short myPort = GetDlgItemInt(hDlg, IDC_Port2, &myportBit, TRUE);
+                std::stringstream ss;
+                ss << GetDlgItemInt(hDlg, IDC_IP5, &ipBit[4], TRUE) << ".";
+                ss << GetDlgItemInt(hDlg, IDC_IP6, &ipBit[5], TRUE) << ".";
+                ss << GetDlgItemInt(hDlg, IDC_IP7, &ipBit[6], TRUE) << ".";
+                ss << GetDlgItemInt(hDlg, IDC_IP8, &ipBit[7], TRUE);
+
                 HWND Warning = GetDlgItem(hDlg, IDC_NeoSTATIC);
                 if ((ipBit[0] & ipBit[1] & ipBit[2] & ipBit[3]) == FALSE) {
                     if (Warning != nullptr)SetWindowText(Warning, L"?请输入IP?");
@@ -47,16 +53,20 @@ INT_PTR CALLBACK ClientSet(HWND hDlg, UINT message, WPARAM wParam, LPARAM lParam
                 else if (myportBit == FALSE) {
                     if (Warning != nullptr)SetWindowText(Warning, L"?请输入您的端口?");
                 }
+                else if ((ipBit[4] & ipBit[5] & ipBit[6] & ipBit[7]) == FALSE) {
+                    if (Warning != nullptr)SetWindowText(Warning, L"?请输入服务器地址?");
+                }
                 else {
+                    std::string SERVERADDR = ss.str();
                     data->sendSock = INVALID_SOCKET;
                     data->getSock = socket(AF_INET, SOCK_STREAM, IPPROTO_TCP); 
                     //if (data->sendSock == INVALID_SOCKET)return 1;
                     if (data->getSock == INVALID_SOCKET)return 1; // 初始化socket
                     data->getAddr.sin_family = AF_INET;
-                    inet_pton(AF_INET, SERVERADDR, &(data->getAddr.sin_addr));
+                    inet_pton(AF_INET, SERVERADDR.c_str(), &(data->getAddr.sin_addr));
                     data->getAddr.sin_port = htons(myPort); // 定义getAddr
                     data->sendAddr.sin_family = AF_INET;
-                    inet_pton(AF_INET, SERVERADDR, &(data->sendAddr.sin_addr));
+                    inet_pton(AF_INET, SERVERADDR.c_str(), &(data->sendAddr.sin_addr));
                     data->sendAddr.sin_port = htons(SERVERPORT); // 定义sendAddr
 
                     bind(data->getSock, (struct sockaddr*)&(data->getAddr), sizeof(data->getAddr));

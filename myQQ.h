@@ -10,9 +10,8 @@
 #include <codecvt>
 #include <vector>
 #include <process.h>
-#define SERVERPORT 30000
-#define SERVERADDR "10.180.126.40"
 #define WM_LISTEN WM_USER+1
+#define SERVERPORT 30000
 INT_PTR CALLBACK ClientSet(HWND, UINT, WPARAM, LPARAM);
 INT_PTR CALLBACK Client(HWND, UINT, WPARAM, LPARAM); // Client
 INT_PTR CALLBACK Server(HWND, UINT, WPARAM, LPARAM); // Server
